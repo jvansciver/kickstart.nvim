@@ -90,8 +90,8 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+-- Set to true if you have a Nerd Font installed
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -433,6 +433,20 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      -- Toggle diagnostics per buffer
+      local function enableDiagnostics()
+        local currentBuf = vim.fn.bufnr '%'
+        vim.diagnostic.enable(currentBuf)
+      end
+
+      local function disableDiagnostics()
+        local currentBuf = vim.fn.bufnr '%'
+        vim.diagnostic.disable(currentBuf)
+      end
+
+      vim.keymap.set('n', '<leader>ed', enableDiagnostics, { desc = '[E]nable [D]iagnostics for the buffer' })
+      vim.keymap.set('n', '<leader>dd', disableDiagnostics, { desc = '[D]isable [D]iagnostics for the buffer' })
     end,
   },
 
@@ -636,6 +650,9 @@ require('lazy').setup({
               completion = {
                 callSnippet = 'Replace',
               },
+              -- inline hints come with version 0.10
+              -- hint = { enable = true },
+
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
